@@ -9,6 +9,7 @@ import LoveLetter from './pages/LoveLetter'
 import Scrapbook from './pages/Scrapbook'
 import Test from './pages/Test'
 import OpeningAnimation from './components/OpeningAnimation'
+import { AudioProvider } from './context/AudioContext'
 
 // Fixed presentation timings — not personal data, so they stay out of siteData.js.
 const OPENING_TIMINGS = {
@@ -26,7 +27,7 @@ const router = createBrowserRouter(createRoutesFromElements(
   </Route>
 ))
 
-const App = () => {
+const AppContent = () => {
   const [loading, setLoading] = useState(true)
   const [showContent, setShowContent] = useState(false)
   const [animateOut, setAnimateOut] = useState(false)
@@ -59,6 +60,14 @@ const App = () => {
       {loading && <OpeningAnimation animateOut={animateOut} />}
       {showContent && <RouterProvider router={router} />}
     </>
+  )
+}
+
+const App = () => {
+  return (
+    <AudioProvider>
+      <AppContent />
+    </AudioProvider>
   )
 }
 

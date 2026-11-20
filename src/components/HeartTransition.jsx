@@ -4,22 +4,23 @@ import '../HeartTransition.css'
 
 const HeartTransition = ({ children }) => {
   const location = useLocation()
-  const previousLocation = useRef(location.key)
+  const previousPathname = useRef(location.pathname)
   const [showTransition, setShowTransition] = useState(false)
 
   useEffect(() => {
-    // Skip the initial page load
-    if (previousLocation.current === location.key) return
+    // Skip initial page load and ignore hash changes within the same page
+    if (previousPathname.current === location.pathname) return
 
-    previousLocation.current = location.key
+    previousPathname.current = location.pathname
     setShowTransition(true)
 
+    // Fastened animation: 1.8s (down from 5.0s) for a smoother, faster transition
     const timer = setTimeout(() => {
       setShowTransition(false)
-    }, 5000)
+    }, 1800)
 
     return () => clearTimeout(timer)
-  }, [location.key])
+  }, [location.pathname])
 
   return (
     <>

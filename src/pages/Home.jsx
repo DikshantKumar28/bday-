@@ -10,6 +10,7 @@ import smileyIcon from '../assets/smiley_icon.png'
 import BookCanvas from '../components/BookCanvas'
 import SmallLetter from '../components/SmallLetter'
 import ScrapbookTab from '../components/ScrapbookTab'
+import MusicButton from '../components/MusicButton'
 import { home, person, sender } from '../data/siteData'
 
 // Fixed presentation values — the whole choreography is sped up with one
@@ -103,6 +104,7 @@ const Home = () => {
 
   return (
     <>
+      <MusicButton />
       <div id="wrapper" style={{ '--home-speed': HOME_SPEED }}>
         <div className="flag__birthday">
           <img src={flag} alt="" width="350" className="flag__left" />

@@ -50,11 +50,11 @@ const STICKER_WALL = [
 ]
 
 const NAV_ITEMS = [
-  { id: 'memories', label: 'Memories' },
-  { id: 'timeline', label: 'Timeline' },
-  { id: 'reasons', label: 'Reasons' },
-  { id: 'wish-jar', label: 'Wish Jar' },
-  { id: 'sticker-wall', label: 'Stickers' },
+  { id: 'memories', label: 'Memories', kicker: '01', desc: 'Memories worth keeping — pinned crooked on purpose.', sticker: '/stickers/sticker-1.webp' },
+  { id: 'timeline', label: 'Timeline', kicker: '02', desc: 'A timeline of little miracles that led to today.', sticker: '/stickers/sticker-5.webp' },
+  { id: 'reasons', label: 'Reasons', kicker: '03', desc: 'Reasons you are impossible to forget. Tap to reveal.', sticker: '/stickers/sticker-4.webp' },
+  { id: 'wish-jar', label: 'Wish Jar', kicker: '04', desc: 'The birthday wish jar. Draw a wish and let the universe do the rest.', sticker: '/stickers/sticker-2.webp' },
+  { id: 'sticker-wall', label: 'Stickers', kicker: '05', desc: 'Flowers, stars, butterflies, and kittens saved for you.', sticker: '/stickers/sticker-3.webp' },
 ]
 
 const SECTIONS = {
@@ -253,6 +253,31 @@ const Scrapbook = () => {
   const [jarShaking, setJarShaking] = useState(false)
   const shakeTimer = useRef(0)
 
+  const getSectionFromHash = () => {
+    const hash = window.location.hash.replace(/^#/, '')
+    if (['memories', 'timeline', 'reasons', 'wish-jar', 'sticker-wall', 'all'].includes(hash)) {
+      return hash
+    }
+    return null
+  }
+
+  const [activeSection, setActiveSection] = useState(getSectionFromHash)
+
+  useEffect(() => {
+    const handleHash = () => {
+      const section = getSectionFromHash()
+      setActiveSection(section)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    window.addEventListener('hashchange', handleHash)
+    window.addEventListener('popstate', handleHash)
+    return () => {
+      window.removeEventListener('hashchange', handleHash)
+      window.removeEventListener('popstate', handleHash)
+    }
+  }, [])
+
   useEffect(() => {
     const revealNodes = Array.from(document.querySelectorAll('.scrapbook [data-reveal]'))
 
@@ -262,13 +287,34 @@ const Scrapbook = () => {
         entry.target.classList.add('is-visible')
         observer.unobserve(entry.target)
       })
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' })
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' })
 
-    revealNodes.forEach((node) => observer.observe(node))
+    revealNodes.forEach((node) => {
+      node.classList.add('is-visible')
+      observer.observe(node)
+    })
     return () => observer.disconnect()
-  }, [])
+  }, [activeSection])
 
   useEffect(() => () => window.clearTimeout(shakeTimer.current), [])
+
+  const enterSection = (id) => {
+    setActiveSection(id)
+    window.location.hash = id
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleBackToScrapbook = () => {
+    setActiveSection(null)
+    if (window.location.hash) {
+      if (window.history.pushState) {
+        window.history.pushState(null, '', window.location.pathname)
+      } else {
+        window.location.hash = ''
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const toggleReason = (index) => {
     setFlippedCards((previous) => {
@@ -295,242 +341,369 @@ const Scrapbook = () => {
     setJarShaking(true)
     window.clearTimeout(shakeTimer.current)
     shakeTimer.current = window.setTimeout(() => setJarShaking(false), 700)
-
-    
   }
 
   const wishButtonLabel = wishIndex === -1 ? SECTIONS.wishJar.button : SECTIONS.wishJar.buttonAgain
+  const isSubpage = activeSection !== null
+  const currentNav = NAV_ITEMS.find((n) => n.id === activeSection)
 
   return (
     <main className="scrapbook">
       <div className="scrapbook-grain" aria-hidden="true"></div>
 
       <div className="scrapbook-bar">
-        <Link className="scrapbook-back" to="/">
-          <span aria-hidden="true">←</span> Back home
-        </Link>
-        <span className="scrapbook-bar__note">For {person.name} · {person.birthday}</span>
+        {isSubpage ? (
+          <button
+            type="button"
+            className="scrapbook-back"
+            onClick={handleBackToScrapbook}
+            aria-label="Back to Scrapbook"
+          >
+            <span aria-hidden="true">←</span> Back to Scrapbook
+          </button>
+        ) : (
+          <Link className="scrapbook-back" to="/">
+            <span aria-hidden="true">←</span> Back home
+          </Link>
+        )}
+        <span className="scrapbook-bar__note">
+          {isSubpage && currentNav
+            ? `Scrapbook · ${currentNav.label}`
+            : isSubpage && activeSection === 'all'
+            ? 'Scrapbook · All Chapters'
+            : `For ${person.name} · ${person.birthday}`}
+        </span>
       </div>
 
-      <header className="scrapbook-hero">
-        <div className="scrapbook-hero__copy">
-          <p className="scrapbook-eyebrow">A little archive of us</p>
-          <h1 className="scrapbook-title">
-            <span>Our</span>
-            <em>Scrapbook</em>
-            <svg className="scrapbook-title__underline" viewBox="0 0 420 26" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M4 17C88 5 176 25 416 10" pathLength="1" />
-            </svg>
-          </h1>
-          <p className="scrapbook-intro">{scrapbook.intro}</p>
-
-          <nav className="scrapbook-nav" aria-label="Scrapbook sections">
-            {NAV_ITEMS.map((item) => (
-              <a key={item.id} className="scrapbook-nav__link" href={`#${item.id}`}>
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-
-        <div className="scrapbook-hero__collage" aria-hidden="true">
-          <svg className="hero-heart" viewBox="0 0 320 280">
-            <path
-              d="M160 252C96 204 24 146 24 86 24 46 55 18 92 18c28 0 51 15 68 42 17-27 40-42 68-42 37 0 68 28 68 68 0 60-72 118-136 166z"
-              pathLength="1"
-            />
-          </svg>
-          <div className="hero-photo">
-            <img src={person.photo} alt="" />
-          </div>
-          <img className="hero-tape" src={TAPE[0]} alt="" />
-          <img className="hero-sticker hero-sticker--rose" src="/stickers/sticker-1.webp" alt="" />
-          <img className="hero-sticker hero-sticker--cat" src="/stickers/cat-glasses.webp" alt="" />
-          <img className="hero-sticker hero-sticker--butterfly" src="/stickers/sticker-5.webp" alt="" />
-          <span className="hero-scribble">for you, always</span>
-        </div>
-      </header>
-
-      <section className="scrapbook-section" aria-labelledby="memories-title">
-        <span id="memories" className="scrapbook-anchor" aria-hidden="true"></span>
-        <SectionHeading id="memories-title" {...SECTIONS.memories} />
-
-        <div className="memory-grid">
-          {memories.map((memory, index) => (
-            <div
-              className="memory-cell"
-              key={`${memory.title}-${index}`}
-              data-reveal
-              style={{ '--delay': `${index * 70}ms` }}
+      {/* Subpage navigation tabs bar when viewing a subpage */}
+      {isSubpage && (
+        <nav className="scrapbook-subnav" aria-label="Subpage navigation">
+          <button
+            type="button"
+            className="scrapbook-subnav__tab is-back"
+            onClick={handleBackToScrapbook}
+          >
+            ← Overview
+          </button>
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={`scrapbook-subnav__tab ${activeSection === item.id ? 'is-active' : ''}`}
+              onClick={() => enterSection(item.id)}
             >
-              <figure
-                className="memory-card"
+              {item.label}
+            </button>
+          ))}
+          <button
+            type="button"
+            className={`scrapbook-subnav__tab ${activeSection === 'all' ? 'is-active' : ''}`}
+            onClick={() => enterSection('all')}
+          >
+            View All
+          </button>
+        </nav>
+      )}
+
+      {/* Main Scrapbook Page Hero (shown on main page, or when 'all') */}
+      {(!isSubpage || activeSection === 'all') && (
+        <header className="scrapbook-hero">
+          <div className="scrapbook-hero__copy">
+            <p className="scrapbook-eyebrow">A little archive of us</p>
+            <h1 className="scrapbook-title">
+              <span>Our</span>
+              <em>Scrapbook</em>
+              <svg className="scrapbook-title__underline" viewBox="0 0 420 26" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M4 17C88 5 176 25 416 10" pathLength="1" />
+              </svg>
+            </h1>
+            <p className="scrapbook-intro">{scrapbook.intro}</p>
+
+            <nav className="scrapbook-nav" aria-label="Scrapbook sections">
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className="scrapbook-nav__link"
+                  onClick={() => enterSection(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="scrapbook-hero__collage" aria-hidden="true">
+            <svg className="hero-heart" viewBox="0 0 320 280">
+              <path
+                d="M160 252C96 204 24 146 24 86 24 46 55 18 92 18c28 0 51 15 68 42 17-27 40-42 68-42 37 0 68 28 68 68 0 60-72 118-136 166z"
+                pathLength="1"
+              />
+            </svg>
+            <div className="hero-photo">
+              <img src={person.photo} alt="" />
+            </div>
+            <img className="hero-tape" src={TAPE[0]} alt="" />
+            <img className="hero-sticker hero-sticker--rose" src="/stickers/sticker-1.webp" alt="" />
+            <img className="hero-sticker hero-sticker--cat" src="/stickers/cat-glasses.webp" alt="" />
+            <img className="hero-sticker hero-sticker--butterfly" src="/stickers/sticker-5.webp" alt="" />
+            <span className="hero-scribble">for you, always</span>
+          </div>
+        </header>
+      )}
+
+      {/* Chapters selection cards on main Scrapbook page */}
+      {!isSubpage && (
+        <section className="scrapbook-hub" aria-label="Scrapbook chapters">
+          <header className="scrapbook-hub__heading">
+            <p className="scrapbook-hub__kicker">Chapters & Memories</p>
+            <h2 className="scrapbook-hub__title">Pick a page to open</h2>
+          </header>
+          <div className="scrapbook-hub-grid">
+            {NAV_ITEMS.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                className="scrapbook-hub-card"
+                onClick={() => enterSection(item.id)}
                 style={{ '--rotate': `${MEMORY_ROTATIONS[index % MEMORY_ROTATIONS.length]}deg` }}
               >
-                <img className="memory-tape" src={TAPE[index % TAPE.length]} alt="" aria-hidden="true" />
-                <img
-                  className="memory-sticker"
-                  src={MEMORY_STICKERS[index % MEMORY_STICKERS.length]}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                />
-                <div className="memory-photo">
+                <img className="scrapbook-hub-card__tape" src={TAPE[index % TAPE.length]} alt="" aria-hidden="true" />
+                <div className="scrapbook-hub-card__top">
+                  <span className="scrapbook-hub-card__kicker">Chapter {item.kicker}</span>
+                  <img className="scrapbook-hub-card__sticker" src={item.sticker} alt="" aria-hidden="true" />
+                </div>
+                <h3 className="scrapbook-hub-card__title">{item.label}</h3>
+                <p className="scrapbook-hub-card__desc">{item.desc}</p>
+                <span className="scrapbook-hub-card__cta">
+                  Open {item.label} <span>→</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="scrapbook-hub-viewall">
+            <button
+              type="button"
+              className="scrapbook-hub-viewall__btn"
+              onClick={() => enterSection('all')}
+            >
+              📖 Or browse all chapters together
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* 01: Memories */}
+      {(activeSection === 'memories' || activeSection === 'all') && (
+        <section className="scrapbook-section" aria-labelledby="memories-title">
+          <span id="memories" className="scrapbook-anchor" aria-hidden="true"></span>
+          <SectionHeading id="memories-title" {...SECTIONS.memories} />
+
+          <div className="memory-grid">
+            {memories.map((memory, index) => (
+              <div
+                className="memory-cell is-visible"
+                key={`${memory.title}-${index}`}
+                data-reveal
+                style={{ '--delay': `${index * 70}ms` }}
+              >
+                <figure
+                  className="memory-card"
+                  style={{ '--rotate': `${MEMORY_ROTATIONS[index % MEMORY_ROTATIONS.length]}deg` }}
+                >
+                  <img className="memory-tape" src={TAPE[index % TAPE.length]} alt="" aria-hidden="true" />
                   <img
-                    src={memory.image}
-                    alt={memory.imageAlt}
-                    style={{ objectFit: memory.imageFit }}
+                    className="memory-sticker"
+                    src={MEMORY_STICKERS[index % MEMORY_STICKERS.length]}
+                    alt=""
+                    aria-hidden="true"
                     loading="lazy"
                   />
-                </div>
-                <figcaption>
-                  <span className="memory-date">{memory.date}</span>
-                  <h3>{memory.title}</h3>
-                  <p>{memory.caption}</p>
-                </figcaption>
-              </figure>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="scrapbook-section scrapbook-section--timeline" aria-labelledby="timeline-title">
-        <span id="timeline" className="scrapbook-anchor" aria-hidden="true"></span>
-        <SectionHeading id="timeline-title" {...SECTIONS.timeline} />
-
-        <div className="timeline" data-reveal>
-          <svg className="timeline-spine" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true">
-            <path className="timeline-spine__path" d="M20 0C8 170 32 330 20 500s12 330 0 500" pathLength="1" />
-          </svg>
-
-          <ol className="timeline-list">
-            {timeline.map((item, index) => (
-              <li
-                className={`timeline-item${item.highlight ? ' is-highlight' : ''}`}
-                key={`${item.title}-${index}`}
-                style={{ '--delay': `${index * 90}ms` }}
-                data-reveal
-              >
-                <span className="timeline-node" aria-hidden="true">
-                  <svg viewBox="0 0 24 24">
-                    <path d={HEART_PATH} />
-                  </svg>
-                </span>
-                <div className="timeline-card">
-                  <span className="timeline-date">{item.date}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </div>
-                <img
-                  className="timeline-sticker"
-                  src={TIMELINE_STICKERS[index % TIMELINE_STICKERS.length]}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                />
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="scrapbook-section" aria-labelledby="reasons-title">
-        <span id="reasons" className="scrapbook-anchor" aria-hidden="true"></span>
-        <SectionHeading id="reasons-title" {...SECTIONS.reasons} />
-
-        <div className="reason-grid">
-          {reasons.map((reason, index) => {
-            const isFlipped = flippedCards.has(index)
-
-            return (
-              <div
-                className={`reason-card${isFlipped ? ' is-flipped' : ''}`}
-                key={reason.front}
-                data-reveal
-                style={{ '--delay': `${index * 60}ms` }}
-              >
-                <button
-                  type="button"
-                  className="reason-card__button"
-                  onClick={() => toggleReason(index)}
-                  aria-pressed={isFlipped}
-                  aria-label={`${reason.front}. ${isFlipped ? reason.back : 'Reveal the note'}`}
-                >
-                  <span className="reason-card__inner">
-                    <span className="reason-card__face reason-card__front">
-                      <span className="reason-card__icon">
-                        <ReasonIcon name={['smile', 'star', 'heart', 'flower', 'butterfly', 'sparkle'][index % 6]} />
-                      </span>
-                      <span className="reason-card__title">{reason.front}</span>
-                      <span className="reason-card__hint">Tap to open</span>
-                    </span>
-                    <span className="reason-card__face reason-card__back">
-                      <span className="reason-card__quote" aria-hidden="true">“</span>
-                      <span className="reason-card__text">{reason.back}</span>
-                      <span className="reason-card__hint">Tap to close</span>
-                    </span>
-                  </span>
-                </button>
+                  <div className="memory-photo">
+                    <img
+                      src={memory.image}
+                      alt={memory.imageAlt}
+                      style={{ objectFit: memory.imageFit }}
+                      loading="lazy"
+                    />
+                  </div>
+                  <figcaption>
+                    <span className="memory-date">{memory.date}</span>
+                    <h3>{memory.title}</h3>
+                    <p>{memory.caption}</p>
+                  </figcaption>
+                </figure>
               </div>
-            )
-          })}
-        </div>
-      </section>
-
-      <section className="scrapbook-section scrapbook-section--wish" aria-labelledby="wish-jar-title">
-        <span id="wish-jar" className="scrapbook-anchor" aria-hidden="true"></span>
-        <SectionHeading id="wish-jar-title" {...SECTIONS.wishJar} />
-
-        <div className="wish-layout">
-          <div className={`wish-jar${jarShaking ? ' is-shaking' : ''}`} data-reveal aria-hidden="true">
-            <WishJar />
+            ))}
           </div>
+        </section>
+      )}
 
-          <div className="wish-panel" data-reveal style={{ '--delay': '120ms' }}>
-            <span className="wish-panel__tape" aria-hidden="true">
-              <img src={TAPE[3]} alt="" />
-            </span>
+      {/* 02: Timeline */}
+      {(activeSection === 'timeline' || activeSection === 'all') && (
+        <section className="scrapbook-section scrapbook-section--timeline" aria-labelledby="timeline-title">
+          <span id="timeline" className="scrapbook-anchor" aria-hidden="true"></span>
+          <SectionHeading id="timeline-title" {...SECTIONS.timeline} />
 
-            {wishIndex === -1 ? (
-              <p className="wish-slip wish-slip--empty">The jar is full of tiny wishes. Pick one.</p>
-            ) : (
-              <p className="wish-slip" key={wishKey}>
-                <span className="wish-slip__quote" aria-hidden="true">“</span>
-                {wishes[wishIndex]}
-              </p>
-            )}
+          <div className="timeline is-visible" data-reveal>
+            <svg className="timeline-spine" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true">
+              <path className="timeline-spine__path" d="M20 0C8 170 32 330 20 500s12 330 0 500" pathLength="1" />
+            </svg>
 
-            <button type="button" className="wish-button" onClick={drawWish} aria-label={SECTIONS.wishJar.ariaLabel}>
-              {wishButtonLabel}
-            </button>
-
-            <span className="wish-count">{wishes.length} little wishes inside</span>
+            <ol className="timeline-list">
+              {timeline.map((item, index) => (
+                <li
+                  className={`timeline-item is-visible${item.highlight ? ' is-highlight' : ''}`}
+                  key={`${item.title}-${index}`}
+                  style={{ '--delay': `${index * 90}ms` }}
+                  data-reveal
+                >
+                  <span className="timeline-node" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d={HEART_PATH} />
+                    </svg>
+                  </span>
+                  <div className="timeline-card">
+                    <span className="timeline-date">{item.date}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </div>
+                  <img
+                    className="timeline-sticker"
+                    src={TIMELINE_STICKERS[index % TIMELINE_STICKERS.length]}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                </li>
+              ))}
+            </ol>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="scrapbook-section" aria-labelledby="sticker-wall-title">
-        <span id="sticker-wall" className="scrapbook-anchor" aria-hidden="true"></span>
-        <SectionHeading id="sticker-wall-title" {...SECTIONS.stickers} />
+      {/* 03: Reasons */}
+      {(activeSection === 'reasons' || activeSection === 'all') && (
+        <section className="scrapbook-section" aria-labelledby="reasons-title">
+          <span id="reasons" className="scrapbook-anchor" aria-hidden="true"></span>
+          <SectionHeading id="reasons-title" {...SECTIONS.reasons} />
 
-        <div className="sticker-wall" data-reveal>
-          {STICKER_WALL.map((sticker, index) => (
-            <figure
-              className="sticker-tile"
-              key={sticker.src}
-              style={{ '--rotate': `${STICKER_ROTATIONS[index % STICKER_ROTATIONS.length]}deg` }}
-            >
-              <img src={sticker.src} alt="" loading="lazy" />
-              <figcaption>{sticker.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
+          <div className="reason-grid">
+            {reasons.map((reason, index) => {
+              const isFlipped = flippedCards.has(index)
 
-      <footer className="scrapbook-footer">
-        <p>{scrapbook.footer}</p>
-        <Link to="/" className="scrapbook-footer__link">Back home <span aria-hidden="true">→</span></Link>
-      </footer>
+              return (
+                <div
+                  className={`reason-card is-visible${isFlipped ? ' is-flipped' : ''}`}
+                  key={reason.front}
+                  data-reveal
+                  style={{ '--delay': `${index * 60}ms` }}
+                >
+                  <button
+                    type="button"
+                    className="reason-card__button"
+                    onClick={() => toggleReason(index)}
+                    aria-pressed={isFlipped}
+                    aria-label={`${reason.front}. ${isFlipped ? reason.back : 'Reveal the note'}`}
+                  >
+                    <span className="reason-card__inner">
+                      <span className="reason-card__face reason-card__front">
+                        <span className="reason-card__icon">
+                          <ReasonIcon name={['smile', 'star', 'heart', 'flower', 'butterfly', 'sparkle'][index % 6]} />
+                        </span>
+                        <span className="reason-card__title">{reason.front}</span>
+                        <span className="reason-card__hint">Tap to open</span>
+                      </span>
+                      <span className="reason-card__face reason-card__back">
+                        <span className="reason-card__quote" aria-hidden="true">“</span>
+                        <span className="reason-card__text">{reason.back}</span>
+                        <span className="reason-card__hint">Tap to close</span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* 04: Wish Jar */}
+      {(activeSection === 'wish-jar' || activeSection === 'all') && (
+        <section className="scrapbook-section scrapbook-section--wish" aria-labelledby="wish-jar-title">
+          <span id="wish-jar" className="scrapbook-anchor" aria-hidden="true"></span>
+          <SectionHeading id="wish-jar-title" {...SECTIONS.wishJar} />
+
+          <div className="wish-layout">
+            <div className={`wish-jar is-visible${jarShaking ? ' is-shaking' : ''}`} data-reveal aria-hidden="true">
+              <WishJar />
+            </div>
+
+            <div className="wish-panel is-visible" data-reveal style={{ '--delay': '120ms' }}>
+              <span className="wish-panel__tape" aria-hidden="true">
+                <img src={TAPE[3]} alt="" />
+              </span>
+
+              {wishIndex === -1 ? (
+                <p className="wish-slip wish-slip--empty">The jar is full of tiny wishes. Pick one.</p>
+              ) : (
+                <p className="wish-slip" key={wishKey}>
+                  <span className="wish-slip__quote" aria-hidden="true">“</span>
+                  {wishes[wishIndex]}
+                </p>
+              )}
+
+              <button type="button" className="wish-button" onClick={drawWish} aria-label={SECTIONS.wishJar.ariaLabel}>
+                {wishButtonLabel}
+              </button>
+
+              <span className="wish-count">{wishes.length} little wishes inside</span>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 05: Stickers */}
+      {(activeSection === 'sticker-wall' || activeSection === 'all') && (
+        <section className="scrapbook-section" aria-labelledby="sticker-wall-title">
+          <span id="sticker-wall" className="scrapbook-anchor" aria-hidden="true"></span>
+          <SectionHeading id="sticker-wall-title" {...SECTIONS.stickers} />
+
+          <div className="sticker-wall is-visible" data-reveal>
+            {STICKER_WALL.map((sticker, index) => (
+              <figure
+                className="sticker-tile"
+                key={sticker.src}
+                style={{ '--rotate': `${STICKER_ROTATIONS[index % STICKER_ROTATIONS.length]}deg` }}
+              >
+                <img src={sticker.src} alt="" loading="lazy" />
+                <figcaption>{sticker.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Footer */}
+      {isSubpage ? (
+        <footer className="scrapbook-footer scrapbook-section-footer">
+          <button
+            type="button"
+            className="scrapbook-back"
+            onClick={handleBackToScrapbook}
+          >
+            <span aria-hidden="true">←</span> Back to Scrapbook
+          </button>
+          <Link to="/" className="scrapbook-footer__link">
+            Back home <span aria-hidden="true">→</span>
+          </Link>
+        </footer>
+      ) : (
+        <footer className="scrapbook-footer">
+          <p>{scrapbook.footer}</p>
+          <Link to="/" className="scrapbook-footer__link">Back home <span aria-hidden="true">→</span></Link>
+        </footer>
+      )}
     </main>
   )
 }

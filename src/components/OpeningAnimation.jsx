@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import confetti from 'canvas-confetti'
 import { person } from '../data/siteData'
+import { useAudio } from '../context/AudioContext'
+import MusicButton from './MusicButton'
 import '../Opening.css'
 
 // Fixed presentation values — change these only if you redesign the loader.
@@ -9,6 +11,12 @@ const CONFETTI_DURATION_MS = 2000
 const CONFETTI_COLORS = ['#bb0000', '#ffffff', '#FF7882', '#f1f0c3']
 
 const OpeningAnimation = ({ animateOut }) => {
+  const { play, isPlaying, autoplayBlocked } = useAudio()
+
+  useEffect(() => {
+    // Start audio playback immediately when opening animation mounts
+    play()
+  }, [play])
 
   useEffect(() => {
     let frameId = 0
@@ -54,7 +62,28 @@ const OpeningAnimation = ({ animateOut }) => {
   }, [])
 
   return (
-    <main className={`bg-[#ee9ca7] w-full h-screen overflow-hidden absolute top-0 left-0 loader-wrapper ${animateOut ? 'slide-up-fade-out' : ''}`}>
+    <main
+      className={`bg-[#ee9ca7] w-full h-screen overflow-hidden absolute top-0 left-0 loader-wrapper ${animateOut ? 'slide-up-fade-out' : ''}`}
+      onClick={play}
+      onPointerDown={play}
+    >
+      <MusicButton />
+
+      {autoplayBlocked && !isPlaying && (
+        <button
+          type="button"
+          className="opening-tap-hint"
+          onClick={(e) => {
+            e.stopPropagation()
+            play()
+          }}
+          aria-label="Play birthday music"
+        >
+          <span className="opening-tap-hint__icon" aria-hidden="true">🎵</span>
+          <span>Tap anywhere to hear music</span>
+        </button>
+      )}
+
       {/* --- SVG Decoration Container --- */}
       <svg className="full-screen-deco" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         {/* Large, slow-moving circle (soft cloud/bubble) - existing */}
@@ -84,8 +113,6 @@ const OpeningAnimation = ({ animateOut }) => {
         <circle cx="75" cy="45" r="1.5" fill="rgba(139, 0, 0, 0.7)" className="deco-shape particle-dot-2" />
         <circle cx="48" cy="88" r="1" fill="rgba(255, 192, 203, 0.9)" className="deco-shape particle-dot-3" />
         <circle cx="55" cy="20" r="1.2" fill="rgba(255, 255, 255, 0.9)" className="deco-shape particle-dot-4" />
-
-
       </svg>
 
       {/* --- Scrapbook stickers scattered around the cake --- */}
@@ -131,14 +158,10 @@ const OpeningAnimation = ({ animateOut }) => {
             <rect x="10" y="475.571" fill="#fefae9" width="180" height="4" />
           </svg>
 
-
-
           <div className="MUNNA cakeText">
             <h1 className="MUNNA cakeText-title">Happy {person.age}th Birthday!</h1>
             <div className="MUNNA cakeText-name">{person.name} <div className="MUNNA cakeText-kitty-bow"></div></div>
           </div>
-
-
         </div>
       </div>
     </main>

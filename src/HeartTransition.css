@@ -11,13 +11,13 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    animation: route-loader-cycle 8s linear forwards;
+    animation: route-loader-cycle 1.8s linear forwards;
 }
 
 /* Stays fully visible while the heart draws, then hides itself. */
 @keyframes route-loader-cycle {
     0%,
-    82% {
+    75% {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
@@ -117,14 +117,14 @@
 
 .heart-loader__group {
     transform-origin: 0 90px;
-    animation: group-anim 4.6s 0.05s forwards;
+    animation: group-anim 1.45s 0.03s forwards;
 }
 
 .heart-loader__square {
     stroke: #FAEBD7;
     stroke-dasharray: 240, 240;
     stroke-dashoffset: 240;
-    animation: square-anim 4.6s 0.05s forwards;
+    animation: square-anim 1.45s 0.03s forwards;
 }
 
 .heart-loader__circle {
@@ -135,11 +135,11 @@
 }
 
 .heart-loader__circle.m--left {
-    animation: left-circle-anim 4.6s 0.05s forwards;
+    animation: left-circle-anim 1.45s 0.03s forwards;
 }
 
 .heart-loader__circle.m--right {
-    animation: right-circle-anim 4.6s 0.05s forwards;
+    animation: right-circle-anim 1.45s 0.03s forwards;
 }
 
 .heart-loader__heartPath {
@@ -147,7 +147,7 @@
     fill: transparent;
     stroke-dasharray: 308.522, 308.522;
     stroke-dashoffset: 308.522;
-    animation: heart-anim 4.6s 0.05s forwards;
+    animation: heart-anim 1.45s 0.03s forwards;
 }
 
 @keyframes square-anim {

@@ -1298,3 +1298,224 @@ html {
         grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
     }
 }
+
+/* --------------------------------------------------------------------------
+   Subpages Hub Grid (on the main Scrapbook page)
+   -------------------------------------------------------------------------- */
+
+.scrapbook-hub {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 5vw, 3rem) clamp(3rem, 6vw, 4.5rem);
+}
+
+.scrapbook-hub__heading {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.scrapbook-hub__kicker {
+    font-family: "Sriracha", cursive;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--wine);
+    margin: 0 0 0.4rem;
+}
+
+.scrapbook-hub__title {
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.scrapbook-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(1.2rem, 2.5vw, 2rem);
+    margin-top: 1.5rem;
+}
+
+.scrapbook-hub-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.6rem 1.4rem 1.3rem;
+    background: #fffdf8;
+    border: 1.5px solid rgba(59, 43, 43, 0.4);
+    border-radius: 4px;
+    box-shadow: 4px 5px 0 rgba(59, 43, 43, 0.15);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
+}
+
+.scrapbook-hub-card:hover,
+.scrapbook-hub-card:focus-visible {
+    transform: translateY(-4px) rotate(0.5deg);
+    box-shadow: 6px 9px 0 rgba(139, 0, 0, 0.22);
+    background: #ffffff;
+    border-color: var(--wine);
+}
+
+.scrapbook-hub-card:focus-visible {
+    outline: 2px solid var(--wine);
+    outline-offset: 2px;
+}
+
+.scrapbook-hub-card__tape {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 60px;
+    height: 20px;
+    pointer-events: none;
+}
+
+.scrapbook-hub-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.scrapbook-hub-card__kicker {
+    font-family: "Sriracha", cursive;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--wine);
+    text-transform: uppercase;
+}
+
+.scrapbook-hub-card__sticker {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.scrapbook-hub-card__title {
+    font-family: "Coiny", "Titan One", sans-serif;
+    font-size: 1.45rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+}
+
+.scrapbook-hub-card__desc {
+    font-family: "Sriracha", cursive;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0 0 1.2rem;
+    flex-grow: 1;
+}
+
+.scrapbook-hub-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "Sriracha", cursive;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--wine);
+}
+
+.scrapbook-hub-card:hover .scrapbook-hub-card__cta span {
+    transform: translateX(4px);
+}
+
+.scrapbook-hub-card__cta span {
+    transition: transform 0.2s ease;
+}
+
+.scrapbook-hub-viewall {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.scrapbook-hub-viewall__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border: 1.5px dashed var(--wine);
+    border-radius: 999px;
+    background: rgba(255, 250, 240, 0.9);
+    font-family: "Sriracha", cursive;
+    font-size: 0.95rem;
+    color: var(--wine);
+    cursor: pointer;
+    box-shadow: 2px 3px 0 rgba(139, 0, 0, 0.15);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.scrapbook-hub-viewall__btn:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Subpage switcher tabs (when viewing a subpage)
+   -------------------------------------------------------------------------- */
+
+.scrapbook-subnav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 1160px;
+    margin: 0.5rem auto 2.5rem;
+    padding: 0 clamp(1rem, 5vw, 3rem);
+}
+
+.scrapbook-subnav__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.95rem 0.4rem;
+    border: 1.5px solid rgba(59, 43, 43, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 250, 240, 0.85);
+    box-shadow: 2px 2px 0 rgba(59, 43, 43, 0.12);
+    font-family: "Sriracha", cursive;
+    font-size: 0.85rem;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.scrapbook-subnav__tab:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+}
+
+.scrapbook-subnav__tab.is-active {
+    background: var(--wine);
+    color: #fff9f0;
+    border-color: var(--wine);
+    box-shadow: 2px 3px 0 rgba(59, 43, 43, 0.3);
+    transform: translateY(-1px);
+}
+
+.scrapbook-subnav__tab.is-back {
+    border-style: dashed;
+    font-weight: 600;
+}
+
+.scrapbook-section-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1160px;
+    margin: 3.5rem auto 1rem;
+    padding-top: 1.5rem;
+    border-top: 1.5px dashed rgba(120, 90, 70, 0.25);
+}

@@ -19,7 +19,7 @@
  * ============================================================================
  */
 
-import portrait from '../assets/orihime.jpg';
+import portrait from '../assets/rajshree.jpeg';
 import stamp from '../assets/love.png';
 import heartLetter from '../assets/heart_letter.png';
 import mewmew from '../assets/mewmew.gif';
@@ -29,17 +29,17 @@ import mewmew from '../assets/mewmew.gif';
  * ------------------------------------------------------------------------ */
 
 export const person = {
-  name: 'Trisha',
-  shortName: 'Trish',
-  age: 18,
-  birthday: '19 November',
+  name: 'Rajshree',
+  shortName: 'Raju panmasala',
+  age: 23,
+  birthday: '21 November',
   photo: portrait,
-  photoAlt: 'A portrait of Trisha',
+  photoAlt: 'A portrait of Rajshree',
 };
 
 export const sender = {
-  name: 'Rexon',
-  signature: 'Your Best Friend, Rexon',
+  name: 'SKD',
+  signature: 'Your SKD',
 };
 
 /* ---------------------------------------------------------------------------
@@ -47,16 +47,16 @@ export const sender = {
  * ------------------------------------------------------------------------ */
 
 export const littleLetter = {
-  from: 'Rajib',
-  date: '19 · 11 · 2026',
+  from: 'SKD',
+  date: '20 · 11 · 2026',
   greeting: `My dearest ${person.name},`,
   paragraphs: [
-    'Happy 18th birthday! I hope this little letter finds you smiling in that way that makes every room feel warmer.',
-    'Thank you for being the softest, bravest, most ridiculous part of my days. You turn ordinary moments into stories I want to keep forever.',
+    'Happy 23th birthday! I hope this little letter finds you smiling in that way that makes every room feel warmer.',
+    'Thank you for being the softest, cutiest , most beautifull part of my days.',
     'May this year be gentle with your heart, loud with your laughter, and full of every little thing you quietly wish for.',
   ],
   closing: 'Always in your corner,',
-  signature: 'Rajib',
+  signature: 'SKD',
   stamp,
 };
 
@@ -71,8 +71,8 @@ export const bigLetter = {
   heading: 'To You!',
   paragraphs: [
     `Happy Birthday, ${person.name} ❤️`,
-    'From the moment we met, something in my life shifted — like the universe quietly guiding me toward someone meant for me. You brought warmth into the parts of me I didn’t even know were cold, and you expanded my days with a dimension I can only call my own.',
-    'On your birthday, I just want you to know this: I want you with me in every chapter, every storm, every sunshine, every tomorrow. No matter what comes, I’ll be on your side — always. I’ll choose you, protect you, stand with you, and love you in ways that remind you you’re never alone.',
+    'From the moment I met you, something in my life shifted — like the universe quietly guiding me. You brought warmth into the parts of me I didn’t even know were cold, and you expanded my life with a dimension.',
+    'On your birthday, I just want you to know this: I want you with me in every chapter, every sunshine, every tomorrow. No matter what comes, I’ll be on your side — always. I’ll choose you, protect you, stand with you, and from my side you’re never alone.',
     'You’re not just another year older today… you’re the reason my life feels softer, brighter, and endlessly worth living. Happy Birthday.',
   ],
   signature: sender.signature,
@@ -83,14 +83,13 @@ export const bigLetter = {
  * ------------------------------------------------------------------------ */
 
 export const loveNotes = [
-  'Wish you the happiest birthday',
-  'One picture from you can change my whole day, my whole mood, my whole heartbeat.',
-  'Even through screens and pixels, your laugh reaches me like sunlight through a window — warm, real, and impossible to forget.',
-  'Every notification from you feels like a heartbeat whispering, I’m here, and I love you.',
-  'Our messages might travel through wires, but every word you send lands straight in my heart.',
-  'Ever since we met, my heart knew where it wanted to stay — with you, in every soft moment, every smile, every quiet piece of forever.',
-  'You turned an ordinary day into a memory my heart refuses to forget. Since then, every moment with you has felt softer, brighter, and filled with a kind of peace only you bring.',
-  'Since our first conversation, you’ve been the quiet spark that changed my world, turning ordinary days into moments that feel beautifully meant to be.',
+  "I don't know if I have the perfect words to describe what makes you special, but there are a few things I genuinely admire about you.",
+  "Your kind nature, your simplicity, your beautiful smile, and the way you carry yourself make you truly unique.",
+  "There's a certain charm in your personality that is difficult to explain but easy to appreciate. Your smile has its own magic, and I hope life always gives you reasons to wear it.",
+  "I wish you never lose the innocence in your laughter, the kindness in your heart, or the simplicity that makes you who you are.",
+  "May you become stronger with every challenge, wiser with every experience, and happier with every passing year.",
+  "This little painting is just a small attempt to make your birthday a little more memorable.",
+  "I hope whenever you look at it, it brings a smile to your face.",
 ];
 
 /* ---------------------------------------------------------------------------
@@ -113,22 +112,22 @@ export const memories = [
   {
     title: 'The first hello',
     date: 'Where it all began',
-    caption: 'A simple hello that quietly turned into the best part of my days.',
+    caption: 'A simple hello that quietly turned into the best part of my life.',
     image: person.photo,
     imageAlt: person.photoAlt,
     imageFit: 'cover',
   },
   {
     title: 'Late-night talks',
-    date: '2 a.m. club',
-    caption: 'Conversations that never felt long enough, even when the sun came up.',
+    date: '12 a.m',
+    caption: 'Conversations that never enough for me, even when the sun came up.',
     image: mewmew,
     imageAlt: 'A tiny cat holding a heart',
     imageFit: 'contain',
   },
   {
-    title: 'You + me',
-    date: 'Our favourite equation',
+    title: 'You',
+    date: 'My favourite equation',
     caption: 'Two little cats, one very big feeling. It has always been us.',
     image: '/stickers/cat-hugging.webp',
     imageAlt: 'Two kittens hugging',
@@ -171,24 +170,14 @@ export const timeline = [
     text: 'One message. No idea that it would become the start of something I would want to remember forever.',
   },
   {
-    date: 'Soon after',
-    title: 'The first real laugh',
-    text: 'The kind of laugh that makes you forget what you were worried about. I knew I wanted more of that sound.',
-  },
-  {
-    date: 'Somewhere in between',
-    title: 'The late-night calls',
-    text: 'Sleepy voices, silly stories, and promises to talk tomorrow. Somehow, midnight became my favourite time zone.',
-  },
-  {
     date: 'A favourite chapter',
-    title: 'The first “I love you”',
+    title: 'The first “I like you which i have said”',
     text: 'Three little words that made the whole world feel quieter, warmer, and a lot more like home.',
   },
   {
     date: person.birthday,
     title: `Today — your ${person.age}th birthday`,
-    text: 'And here we are: celebrating you, the person who made all of these little moments add up to something beautiful.',
+    text: 'And here I: celebrates you, the person who made all of these little moments add up to something beautiful.',
     highlight: true,
   },
 ];
@@ -218,21 +207,15 @@ export const reasons = [
     front: 'Your presence',
     back: 'Everything feels calmer, softer, and a little more like home when you are around.',
   },
-  {
-    front: 'Your dreams',
-    back: 'The way you light up when you talk about them is proof that the future is lucky to have you.',
-  },
 ];
 
 export const wishes = [
-  'A year full of soft mornings, good coffee, and zero skipped desserts.',
+  'A guy who is always with you.',
   'The courage to chase the things that make your eyes light up.',
   'People who love you loudly, exactly as you are.',
-  'A hundred tiny moments that make you feel ridiculously lucky.',
-  'Every door you knock on opening into something better than you imagined.',
+  'God will give hundred tiny moments that make u feel ridiculously lucky.',
   'A life that feels as beautiful as the way you make other people feel.',
-  'More laughter than your ribs can handle, and someone always there to catch you.',
-  'A front-row seat to every dream you have been quietly working toward.',
+  'More laughter than your ribs can handle, and someone always there 4u .',
 ];
 
 /* ---------------------------------------------------------------------------
